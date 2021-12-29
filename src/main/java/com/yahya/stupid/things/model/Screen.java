@@ -9,7 +9,8 @@ public interface Screen {
     void setService(ScheduledExecutorService service);
 
     default void pause() {
-        if (getService() != null && getService().isShutdown()) {
+        if (getService() != null && !getService().isShutdown()) {
+            System.out.println("Pausing....");
             getService().shutdown();
             setService(null);
         }

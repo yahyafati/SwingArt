@@ -27,7 +27,8 @@ public class MainFrame extends JFrame {
 //        TriangleScreen screen = new TriangleScreen(this);
 //        CircleScreen screen = new CircleScreen(this);
 
-        MosaicScreen screen = new MosaicScreen(this);
+//        MosaicScreen screen = new MosaicScreen(this);
+        PixelatedImageScreen screen = new PixelatedImageScreen(this);
         initToolbar(contentPane, screen);
         contentPane.add(screen, BorderLayout.CENTER);
         setContentPane(contentPane);
@@ -47,6 +48,7 @@ public class MainFrame extends JFrame {
         startLabel.setForeground(Color.BLUE);
         startLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         controllerPanel.add(startLabel);
+
         JLabel pauseLabel = new JLabel("Pause");
         pauseLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -57,6 +59,7 @@ public class MainFrame extends JFrame {
         pauseLabel.setForeground(Color.BLUE);
         pauseLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         controllerPanel.add(pauseLabel);
+
         JLabel restartLabel = new JLabel("Restart");
         restartLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -68,6 +71,7 @@ public class MainFrame extends JFrame {
         restartLabel.setForeground(Color.BLUE);
         restartLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         controllerPanel.add(restartLabel);
+
         JLabel clearLabel = new JLabel("Clear");
         clearLabel.setForeground(Color.BLUE);
         clearLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -78,8 +82,8 @@ public class MainFrame extends JFrame {
             }
         });
         controllerPanel.add(clearLabel);
-        controllerPanel.setBackground(getBackground());
-        controllerPanel.setBounds(0, -3, getWidth() - 50, 20);
+
+
 
 
         exitLabel.setForeground(Color.PINK);
@@ -91,6 +95,9 @@ public class MainFrame extends JFrame {
                 exit();
             }
         });
+
+        controllerPanel.setBackground(getBackground());
+        controllerPanel.setBounds(0, -3, getWidth() - 50, 20);
         controllerPanel.add(exitLabel);
 
         contentPane.add(controllerPanel, BorderLayout.NORTH);
