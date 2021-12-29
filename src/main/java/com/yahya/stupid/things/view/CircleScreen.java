@@ -117,6 +117,16 @@ public class CircleScreen extends JPanel implements Screen {
     }
 
     @Override
+    public ScheduledExecutorService getService() {
+        return service;
+    }
+
+    @Override
+    public void setService(ScheduledExecutorService service) {
+        this.service = service;
+    }
+
+    @Override
     public void pause() {
         if (service == null) return;
         service.shutdown();;

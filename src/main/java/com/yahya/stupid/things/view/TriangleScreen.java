@@ -108,12 +108,25 @@ public class TriangleScreen extends JPanel implements Screen {
     }
 
     @Override
-    public void pause() {
+    public ScheduledExecutorService getService() {
+        return service;
+    }
 
+    @Override
+    public void setService(ScheduledExecutorService service) {
+        this.service = service;
     }
 
     @Override
     public void clear() {
-
+        if (service != null) {
+            service.shutdown();
+            service = null;
+        }
+        sideLength.set(200);
+        counter.set(0);
+        angle.set(-36.0);
+        points.clear();
+        currentPoint = new Point((MIN_X + MAX_X - sideLength.get())/2 , (MIN_Y+MAX_Y + sideLength.get())/2);
     }
 }
