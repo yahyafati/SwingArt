@@ -144,6 +144,16 @@ public class DVDScreen extends JPanel implements Screen {
         }, 250, 5, TimeUnit.MILLISECONDS);
     }
 
+    @Override
+    public ScheduledExecutorService getService() {
+        return service;
+    }
+
+    @Override
+    public void setService(ScheduledExecutorService service) {
+        this.service = service;
+    }
+
     private boolean isCorner(Point position) {
         if (position.x == MIN_X && position.y == MIN_Y) {
             return true;
