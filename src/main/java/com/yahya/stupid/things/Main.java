@@ -1,9 +1,7 @@
 package com.yahya.stupid.things;
 
 import com.yahya.stupid.things.view.MainFrame;
-
 import javax.swing.*;
-import java.util.Arrays;
 
 public class Main {
 
@@ -17,5 +15,6 @@ public class Main {
             MainFrame mainFrame = new MainFrame();
             mainFrame.setVisible(true);
         });
+//        System.getProperties().forEach((k, v) -> System.out.println(k + ": " + v));
     }
 }

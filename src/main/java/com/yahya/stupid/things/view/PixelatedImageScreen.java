@@ -1,21 +1,15 @@
 package com.yahya.stupid.things.view;
 
+import com.yahya.stupid.things.model.ImageUtils;
 import com.yahya.stupid.things.model.Screen;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,8 +40,8 @@ public class PixelatedImageScreen extends JPanel implements Screen {
         pixleSize = new AtomicInteger(200);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            originalImage = loadImage();
-            scaledImage = scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
+            originalImage = ImageUtils.loadImage(fileChooser, mainFrame);
+            scaledImage = ImageUtils.scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
             alteredImage = pixelateImage(pixleSize.get());
             repaint();
         });
@@ -58,8 +52,8 @@ public class PixelatedImageScreen extends JPanel implements Screen {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
 
-                    originalImage = loadImage();
-                    scaledImage = scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
+                    originalImage = ImageUtils.loadImage(fileChooser, mainFrame);
+                    scaledImage = ImageUtils.scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
                     pixleSize.set(Math.min(MAX_X-MIN_X, MAX_Y-MIN_Y));
                     alteredImage = pixelateImage(pixleSize.get());
                     repaint();
@@ -68,62 +62,6 @@ public class PixelatedImageScreen extends JPanel implements Screen {
         });
 
         init();
-    }
-
-    static BufferedImage deepCopy(BufferedImage bi) {
-        ColorModel cm = bi.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = bi.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-    }
-
-    private static BufferedImage scaled(BufferedImage original, int newWidth, int newHeight) {
-        BufferedImage resized = new BufferedImage(newWidth, newHeight, original.getType());
-        Graphics2D g = resized.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(original, 0, 0, newWidth, newHeight, 0, 0, original.getWidth(),
-                original.getHeight(), null);
-        g.dispose();
-        return resized;
-    }
-
-    private BufferedImage loadImage() {
-        fileChooser.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                if (f.isDirectory()) return true;
-                if (!f.isFile()) return false;
-                return isAcceptableExtension(f.getName());
-            }
-
-            private boolean isAcceptableExtension(String fileName) {
-                int dotIndex = fileName.lastIndexOf(".");
-                if (dotIndex == -1) return false;
-                String[] acceptableExts = {"bmp", "gif", "jpeg", "jpg", "png", "webmp"};
-                return Arrays.binarySearch(acceptableExts, fileName.substring(dotIndex+1)) >= 0;
-            }
-
-            @Override
-            public String getDescription() {
-                return "Image Files";
-            }
-        });
-
-        if (fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
-            try {
-                return ImageIO.read(fileChooser.getSelectedFile());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            try {
-                return ImageIO.read(Objects.requireNonNull(PixelatedImageScreen.class.getResourceAsStream("/images/img.png")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 
     private int getAverageColor(BufferedImage img, int startX, int startY, int tileSize) {
@@ -152,32 +90,14 @@ public class PixelatedImageScreen extends JPanel implements Screen {
     }
 
     private BufferedImage pixelateImage(int tileSize) {
-//        BufferedImage image = deepCopy(scaledImage);
-//        int imgWidth = image.getWidth(), imgHeight = image.getHeight();
-//        for (int i = 0; i < imgWidth; i+=tileSize) {
-//            for (int j = 0; j < imgHeight; j+=tileSize) {
-//                int averageColorRGB = getAverageColor(image, i, j, tileSize);
-//                setColors(image, i, j, tileSize, averageColorRGB);
-//            }
-//        }
-//        return image;
-        // How big should the pixelation be?
-
-        // Get the raster data (array of pixels)
         Raster src = scaledImage.getData();
-        // Create an identically-sized output raster
         WritableRaster dest = src.createCompatibleWritableRaster();
-        // Loop through every PIX_SIZE pixels, in both x and y directions
         for(int y = 0; y < src.getHeight(); y += tileSize) {
             for(int x = 0; x < src.getWidth(); x += tileSize) {
-                // Copy the pixel
                 double[] pixel = new double[3];
                 int midX = (x + Math.min(x+tileSize, src.getWidth()))/2;
                 int midY = (y + Math.min(y+tileSize, src.getHeight()))/2;
                 pixel = src.getPixel(midX, midY, pixel);
-
-                // "Paste" the pixel onto the surrounding PIX_SIZE by PIX_SIZE neighbors
-                // Also make sure that our loop never goes outside the bounds of the image
                 for(int yd = y; (yd < y + tileSize) && (yd < dest.getHeight()); yd++) {
                     for(int xd = x; (xd < x + tileSize) && (xd < dest.getWidth()); xd++) {
                         dest.setPixel(xd, yd, pixel);
@@ -185,9 +105,7 @@ public class PixelatedImageScreen extends JPanel implements Screen {
                 }
             }
         }
-
-        // Save the raster back to the Image
-        BufferedImage retImage = deepCopy(scaledImage);
+        BufferedImage retImage = ImageUtils.deepCopy(scaledImage);
         retImage.setData(dest);
         return retImage;
     }
