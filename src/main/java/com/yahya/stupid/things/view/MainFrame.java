@@ -29,8 +29,10 @@ public class MainFrame extends JFrame {
 //        MosaicScreen screen = new MosaicScreen(this);
 //        PixelatedImageScreen screen = new PixelatedImageScreen(this);
 
-        DarkenScreen screen = new DarkenScreen(this);
+//        DarkenScreen screen = new DarkenScreen(this);
 
+//        RandomScreen screen = new RandomScreen(this);
+        ManualScreen screen = new ManualScreen(this);
         initToolbar(contentPane, screen);
         contentPane.add(screen, BorderLayout.CENTER);
         setContentPane(contentPane);

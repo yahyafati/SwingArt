@@ -35,13 +35,14 @@ public class DVDScreen extends JPanel implements Screen {
         MIN_Y = 30;
         MAX_X = mainFrame.getWidth() - MIN_X;
         MAX_Y = mainFrame.getHeight() - MIN_Y - 10;
-        setBackground(Color.BLACK);
+        setBackground(new Color(32, 42, 79));
 
-//        BOX_WIDTH = 100;
-//        BOX_HEIGHT = 50;
+        BOX_WIDTH = (int) (Math.random()*150);
+        BOX_HEIGHT = BOX_WIDTH/2;
+        System.out.printf("(BOX_WIDTH: %d, BOX_HEIGHT: %d)", BOX_WIDTH, BOX_HEIGHT);
 
-        BOX_WIDTH = 0;
-        BOX_HEIGHT = 0;
+//        BOX_WIDTH = 0;
+//        BOX_HEIGHT = 0;
 
         System.out.println(new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y));
         this.form = new Form(1, 0);
@@ -181,7 +182,7 @@ public class DVDScreen extends JPanel implements Screen {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.BLACK);
         g2.drawRect(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y);
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

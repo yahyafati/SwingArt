@@ -64,31 +64,6 @@ public class PixelatedImageScreen extends JPanel implements Screen {
         init();
     }
 
-    private int getAverageColor(BufferedImage img, int startX, int startY, int tileSize) {
-        double rgb = 0;
-        int count = 0;
-        int lastX = Math.min(startX+tileSize, img.getWidth());
-        int lastY = Math.min(startY+tileSize, img.getHeight());
-        for (int i = startX; i < lastX; i++) {
-            for (int j = startY; j < lastY; j++) {
-                rgb += img.getRGB(i, j);
-                count++;
-            }
-        }
-        return (int) (rgb/count);
-    }
-
-    private void setColors(BufferedImage img, int startX, int startY, int tileSize, int rgb) {
-        int lastX = Math.min(startX+tileSize, img.getWidth());
-        int lastY = Math.min(startY+tileSize, img.getHeight());
-
-        for (int i = startX; i < lastX; i++) {
-            for (int j = startY; j < lastY; j++) {
-                img.setRGB(i, j, rgb);
-            }
-        }
-    }
-
     private BufferedImage pixelateImage(int tileSize) {
         Raster src = scaledImage.getData();
         WritableRaster dest = src.createCompatibleWritableRaster();
