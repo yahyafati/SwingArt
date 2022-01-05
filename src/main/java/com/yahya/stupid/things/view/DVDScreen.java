@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DVDScreen extends JPanel implements Screen {
     private final MainFrame mainFrame;
     private final Form form;
-    final int MIN_X, MIN_Y, MAX_X, MAX_Y;
+    private final int MIN_X, MIN_Y, MAX_X, MAX_Y;
+    private final int BOX_WIDTH, BOX_HEIGHT;
     Point currentPosition;
     final AtomicInteger xChange = new AtomicInteger(1);
     final ArrayList<Point> myPoints = new ArrayList<>();
@@ -26,6 +27,7 @@ public class DVDScreen extends JPanel implements Screen {
     JButton startButton;
     ScheduledExecutorService service;
     Color currentColor;
+    private boolean beepOnCollision;
 
     public DVDScreen(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -35,10 +37,16 @@ public class DVDScreen extends JPanel implements Screen {
         MAX_Y = mainFrame.getHeight() - MIN_Y - 10;
         setBackground(Color.BLACK);
 
+//        BOX_WIDTH = 100;
+//        BOX_HEIGHT = 50;
+
+        BOX_WIDTH = 0;
+        BOX_HEIGHT = 0;
+
         System.out.println(new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y));
         this.form = new Form(1, 0);
 
-        currentPosition = new Point(MIN_X, (int) form.calculate(MIN_X));
+        currentPosition = new Point(MIN_X + BOX_WIDTH/2, (int) form.calculate(MIN_X + BOX_WIDTH/2));
         myPoints.add(new Point(currentPosition));
         currentColor = new Color((int) (Math.random() * Integer.MAX_VALUE));
         init();
@@ -76,7 +84,7 @@ public class DVDScreen extends JPanel implements Screen {
         if (service != null && !service.isShutdown()) {
             service.shutdown();
             service = null;
-            startButton.setVisible(true);
+//            startButton.setVisible(true);
             mainFrame.validate();
             mainFrame.repaint();
         }
@@ -99,11 +107,11 @@ public class DVDScreen extends JPanel implements Screen {
     }
 
     private boolean isOutOfBoundHeight(Point position) {
-        return position.y > MAX_Y || position.y < MIN_Y;
+        return position.y + BOX_HEIGHT/2 > MAX_Y || position.y-BOX_HEIGHT/2 < MIN_Y;
     }
 
     private boolean isOutOfBoundWidth(Point position) {
-        return position.x > MAX_X || position.x < MIN_X;
+        return position.x + BOX_WIDTH/2 > MAX_X || position.x-BOX_WIDTH/2 < MIN_X;
     }
 
     public void start() {
@@ -121,7 +129,8 @@ public class DVDScreen extends JPanel implements Screen {
                     form.calculate(currentPosition.x + xChange.get())
             );
             if (isOutOfBound(currentPosition)) {
-                loadBeep();
+                if (beepOnCollision)
+                    loadBeep();
                 Point originalPosition = new Point(currentPosition);
                 currentPosition.setLocation(
                         Math.min(Math.max(currentPosition.x, MIN_X), MAX_X),
@@ -141,7 +150,7 @@ public class DVDScreen extends JPanel implements Screen {
 
             }
             repaint();
-        }, 250, 5, TimeUnit.MILLISECONDS);
+        }, 250, 500, TimeUnit.MICROSECONDS);
     }
 
     @Override
@@ -177,10 +186,8 @@ public class DVDScreen extends JPanel implements Screen {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        int x =  currentPosition.x;
-        int y =  currentPosition.y;
-        g2.setColor(Color.BLUE);
-        g2.fillOval(x, y, 10, 10);
+        final int x =  currentPosition.x;
+        final int y =  currentPosition.y;
 
         g2.setColor(currentColor);
         g2.setStroke(new BasicStroke(1));
@@ -192,5 +199,18 @@ public class DVDScreen extends JPanel implements Screen {
         g2.setStroke(new BasicStroke(2));
         Point lastMyPoint = myPoints.get(myPoints.size() - 1);
         g2.drawLine( lastMyPoint.x,  lastMyPoint.y,  currentPosition.x,  currentPosition.y);
+
+        g2.setColor(Color.BLUE);
+//        int radius = 5;
+//        g2.fillOval(x-radius, y-radius, radius*2, radius*2);
+        g2.drawRect(x-BOX_WIDTH/2, y - BOX_HEIGHT/2, BOX_WIDTH, BOX_HEIGHT);
+    }
+
+    public void setBeepOnCollision(boolean beepOnCollision) {
+        this.beepOnCollision = beepOnCollision;
+    }
+
+    public boolean getBeepOnCollision() {
+        return beepOnCollision;
     }
 }

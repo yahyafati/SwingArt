@@ -26,11 +26,11 @@ public class MainFrame extends JFrame {
 //        DVDScreen screen = new DVDScreen(this);
 //        TriangleScreen screen = new TriangleScreen(this);
 //        CircleScreen screen = new CircleScreen(this);
-
 //        MosaicScreen screen = new MosaicScreen(this);
 //        PixelatedImageScreen screen = new PixelatedImageScreen(this);
 
         DarkenScreen screen = new DarkenScreen(this);
+
         initToolbar(contentPane, screen);
         contentPane.add(screen, BorderLayout.CENTER);
         setContentPane(contentPane);

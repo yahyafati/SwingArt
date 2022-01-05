@@ -75,7 +75,7 @@ public class MosaicScreen extends JPanel implements Screen {
                 currentColumn.set((currentColumn.get() + 1));
                 currentRow.set(0);
             }
-        }, 100, 1, TimeUnit.MILLISECONDS);
+        }, 100, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override

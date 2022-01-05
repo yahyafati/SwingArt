@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,7 +98,44 @@ public class ImageUtils {
                 double[] pixel = raster.getPixel(x,y, new double[3]);
                 double brightness =getBrightness(pixel);
                 double bRate = brightness/255.0;
-                image.setRGB(x, y, getRGB((int)(brightness), (int)(brightness), (int)(brightness)));
+                if (bRate > .4) {
+//                    image.setRGB(x, y, getRGB((int) (brightness), (int) (brightness), (int) (brightness)));
+                    image.setRGB(x, y, (int) (Math.random()*Integer.MAX_VALUE));
+                }
+                else {
+//                    image.setRGB(x, y, 0);
+
+                }
+            }
+        }
+        return image;
+    }
+
+    public static BufferedImage randomizeColorArea(BufferedImage image, int startX, int startY, int endX, int endY, double avgBrightness) {
+        image = deepCopy(image);
+        Raster raster = image.getData();
+        startX = Math.min(startX, image.getWidth()-1);
+        startY = Math.min(startY, image.getHeight()-1);
+        endX = Math.min(endX, image.getWidth());
+        endY = Math.min(endY, image.getHeight());
+        for (int x = startX; x < endX; x+=10) {
+            for (int y = startY; y < endY; y+=10) {
+                int[] pixel = raster.getPixel(x, y, new int[3]);
+                double brightness = getBrightness(pixel);
+                double bRate = brightness / 255.0;
+//                if ((avgBrightness > 0.5 && bRate > avgBrightness) || (avgBrightness < 0.5 && bRate < avgBrightness)) {
+////                    image.setRGB(x, y, getRGB((int) (brightness), (int) (brightness), (int) (brightness)));
+////                    image.setRGB(x, y, (int) (Math.random()*Integer.MAX_VALUE));
+////                    image.setRGB(x,y, Color.white.getRGB());
+//                    image.setRGB(x, y, );
+//                }
+                int width = Math.min(5, endX - x - 1);
+                int height = Math.min(5, endY - y - 1);
+                for (int xx = x; xx < x+width; xx++) {
+                    for (int yy = y; yy < y+height; yy++) {
+                        image.setRGB(xx, yy, image.getRGB(x,y));
+                    }
+                }
             }
         }
         return image;
@@ -163,5 +199,21 @@ public class ImageUtils {
         BufferedImage retImage = ImageUtils.deepCopy(image);
         retImage.setData(dest);
         return retImage;
+    }
+
+    public static int getAverageBrightness(BufferedImage originalImage) {
+        double avg = 0;
+        int count = 0;
+        for (int i = 0; i < originalImage.getWidth(); i+=10) {
+            for (int j = 0; j < originalImage.getHeight(); j+=10, count++) {
+                avg += getBrightness(originalImage.getRGB(i, j));
+            }
+        }
+//        return (int) getBrightness(new Color((int) (avg/count)));
+        return (int) (avg/count);
+    }
+
+    private static double getBrightness(int rgb) {
+        return getBrightness(new Color(rgb));
     }
 }

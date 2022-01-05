@@ -5,13 +5,16 @@ import com.yahya.stupid.things.model.ImageFileFilter;
 import com.yahya.stupid.things.model.ImageUtils;
 import com.yahya.stupid.things.model.Screen;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +35,7 @@ public class DarkenScreen extends JPanel implements Screen {
     private final Point currentPosition;
     private final AtomicInteger width;
     private final AtomicInteger height;
+    private final AtomicInteger avgBrightness;
     private final AtomicInteger xChange = new AtomicInteger(1);
 
     public DarkenScreen(MainFrame mainFrame) {
@@ -48,7 +52,20 @@ public class DarkenScreen extends JPanel implements Screen {
         currentPosition = new Point(0, 0);
         width = new AtomicInteger(200);
         height = new AtomicInteger(150);
+        avgBrightness = new AtomicInteger(0);
         this.form = new Form(1, 0);
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                originalImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/images/img.png")));
+                scaledImage = ImageUtils.scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
+                avgBrightness.set(ImageUtils.getAverageBrightness(originalImage));
+                System.out.println(avgBrightness.get()/255.0);
+                repaint();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -60,6 +77,8 @@ public class DarkenScreen extends JPanel implements Screen {
                         return;
                     }
                     scaledImage = ImageUtils.scaled(originalImage, MAX_X-MIN_X, MAX_Y-MIN_Y);
+                    avgBrightness.set(ImageUtils.getAverageBrightness(originalImage));
+                    System.out.println(avgBrightness.get()/255.0);
                     repaint();
                 }
             }
@@ -88,15 +107,20 @@ public class DarkenScreen extends JPanel implements Screen {
 //        );
 
         g2.drawImage(
-                ImageUtils.grayScaleExceptArea(
+                ImageUtils.randomizeColorArea(
                         scaledImage,
                         currentPosition.x,
                         currentPosition.y,
                         currentPosition.x + width.get(),
-                        currentPosition.y + height.get()
+                        currentPosition.y + height.get(),
+                        avgBrightness.get()/255.0
                 ),
                 MIN_X, MIN_Y, (img, infoFlags, x, y, width, height) -> false
         );
+
+        g2.setColor(Color.MAGENTA);
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawRect(currentPosition.x + MIN_X, currentPosition.y +MIN_Y, width.get(), height.get());
 
 //        g2.setStroke(new BasicStroke(2f));
 //        g2.setColor(Color.CYAN);
