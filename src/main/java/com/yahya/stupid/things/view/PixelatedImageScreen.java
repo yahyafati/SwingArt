@@ -2,6 +2,7 @@ package com.yahya.stupid.things.view;
 
 import com.yahya.stupid.things.model.ImageUtils;
 import com.yahya.stupid.things.model.Screen;
+import com.yahya.stupid.things.model.ScreenPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PixelatedImageScreen extends JPanel implements Screen {
+public class PixelatedImageScreen extends ScreenPanel {
 
     private final MainFrame mainFrame;
     private final JFileChooser fileChooser = new JFileChooser();

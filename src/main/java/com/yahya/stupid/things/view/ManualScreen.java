@@ -1,6 +1,7 @@
 package com.yahya.stupid.things.view;
 
 import com.yahya.stupid.things.model.Screen;
+import com.yahya.stupid.things.model.ScreenPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class ManualScreen extends JPanel implements Screen {
+public class ManualScreen extends ScreenPanel {
 
     private final int MIN_X;
     private final int MIN_Y;

@@ -1,16 +1,24 @@
 package com.yahya.stupid.things.view;
 
-import com.yahya.stupid.things.model.Screen;
+import com.yahya.stupid.things.model.ScreenPanel;
+import com.yahya.stupid.things.model.ScreenType;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 public class MainFrame extends JFrame {
 
+    private static final ScreenType DEFAULT_SCREEN = ScreenType.DVDScreen;
+
+    private ScreenPanel screen;
+    private final JPanel contentPane;
+
     public MainFrame() {
+        contentPane = new JPanel(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(new Dimension(800, 600));
         setLocationRelativeTo(null);
@@ -19,26 +27,26 @@ public class MainFrame extends JFrame {
     }
 
     private void init() {
-        JPanel contentPane = new JPanel(new BorderLayout());
-
-
-
-//        DVDScreen screen = new DVDScreen(this);
-//        TriangleScreen screen = new TriangleScreen(this);
-//        CircleScreen screen = new CircleScreen(this);
-//        MosaicScreen screen = new MosaicScreen(this);
-//        PixelatedImageScreen screen = new PixelatedImageScreen(this);
-
-//        DarkenScreen screen = new DarkenScreen(this);
-
-//        RandomScreen screen = new RandomScreen(this);
-        ManualScreen screen = new ManualScreen(this);
-        initToolbar(contentPane, screen);
-        contentPane.add(screen, BorderLayout.CENTER);
+        setScreen(getScreen(ScreenType.DVDScreen));
+        initToolbar(contentPane);
         setContentPane(contentPane);
     }
 
-    private void initToolbar(JPanel contentPane, Screen screen) {
+    private ScreenPanel getScreen(ScreenType type) {
+        switch (type) {
+            case CircleScreen: return new CircleScreen(this);
+            case DarkenScreen: return new DarkenScreen(this);
+            case ManualScreen: return new ManualScreen(this);
+            case MosaicScreen: return new MosaicScreen(this);
+            case PixelatedImageScreen: return new PixelatedImageScreen(this);
+            case TriangleScreen: return new TriangleScreen(this);
+            case RandomScreen: return new RandomScreen(this);
+            case DVDScreen:
+            default: return new DVDScreen(this);
+        }
+    }
+
+    private void initToolbar(JPanel contentPane) {
         JLabel exitLabel = new JLabel("Exit");
 
         JPanel controllerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -88,7 +96,20 @@ public class MainFrame extends JFrame {
         controllerPanel.add(clearLabel);
 
 
-
+        JLabel changeScreeLabel = new JLabel("Change Screen");
+        changeScreeLabel.setForeground(Color.decode("#008800"));
+        changeScreeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        changeScreeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.println("Clicked");
+                System.out.println("Clicked");
+                setScreen(getScreen(ScreenType.CircleScreen));
+//                JOptionPane.showMessageDialog(changeScreeLabel.getRootPane(), "Clicked");
+            }
+        });
+        controllerPanel.add(changeScreeLabel);
 
         exitLabel.setForeground(Color.PINK);
         exitLabel.setBounds(getWidth() - 50, 0, 50, 20);
@@ -112,4 +133,15 @@ public class MainFrame extends JFrame {
     }
 
 
+    public void setScreen(ScreenPanel screen) {
+        if (this.screen != null) {
+            this.screen.clear();
+            contentPane.remove(this.screen);
+        }
+
+        this.screen = screen;
+        contentPane.add(screen, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
 }

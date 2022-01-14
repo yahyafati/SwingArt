@@ -1,8 +1,7 @@
 package com.yahya.stupid.things.view;
 
-import com.yahya.stupid.things.model.Screen;
+import com.yahya.stupid.things.model.ScreenPanel;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TriangleScreen extends JPanel implements Screen {
+public class TriangleScreen extends ScreenPanel {
 
     private final MainFrame mainFrame;
     private final int MIN_X, MAX_X, MIN_Y, MAX_Y;

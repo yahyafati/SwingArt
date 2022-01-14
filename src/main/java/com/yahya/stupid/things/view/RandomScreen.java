@@ -1,6 +1,7 @@
 package com.yahya.stupid.things.view;
 
 import com.yahya.stupid.things.model.Screen;
+import com.yahya.stupid.things.model.ScreenPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RandomScreen extends JPanel implements Screen {
+public class RandomScreen extends ScreenPanel {
 
 
     private final int MIN_X;
@@ -38,11 +39,12 @@ public class RandomScreen extends JPanel implements Screen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.BLACK);
-        g2.drawRect(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y);
+
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
+        g2.setColor(Color.BLACK);
+        g2.drawRect(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y);
 
         g2.setColor(Color.DARK_GRAY);
         for (int i = 1; i < points.size(); i++) {
