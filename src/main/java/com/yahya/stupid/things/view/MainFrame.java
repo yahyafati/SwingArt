@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         contentPane = new JPanel(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(new Dimension(800, 600));
+        setSize(new Dimension(1200, 800));
         setLocationRelativeTo(null);
         setUndecorated(true);
         init();
@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
             case PixelatedImageScreen: return new PixelatedImageScreen(this);
             case TriangleScreen: return new TriangleScreen(this);
             case RandomScreen: return new RandomScreen(this);
+            case SolarSystemScreen: return new SolarSystemScreen(this);
             case DVDScreen:
             default: return new DVDScreen(this);
         }

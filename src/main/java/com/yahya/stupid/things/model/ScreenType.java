@@ -8,5 +8,6 @@ public enum ScreenType {
     MosaicScreen,
     PixelatedImageScreen,
     RandomScreen,
-    TriangleScreen
+    TriangleScreen,
+    SolarSystemScreen,
 }
