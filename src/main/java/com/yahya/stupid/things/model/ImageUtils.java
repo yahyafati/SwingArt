@@ -118,8 +118,9 @@ public class ImageUtils {
         startY = Math.min(startY, image.getHeight()-1);
         endX = Math.min(endX, image.getWidth());
         endY = Math.min(endY, image.getHeight());
-        for (int x = startX; x < endX; x+=10) {
-            for (int y = startY; y < endY; y+=10) {
+        final int TILE_SIZE = 10;
+        for (int x = startX; x < endX; x+=TILE_SIZE) {
+            for (int y = startY; y < endY; y+=TILE_SIZE) {
                 int[] pixel = raster.getPixel(x, y, new int[3]);
                 double brightness = getBrightness(pixel);
                 double bRate = brightness / 255.0;
@@ -129,8 +130,8 @@ public class ImageUtils {
 ////                    image.setRGB(x,y, Color.white.getRGB());
 //                    image.setRGB(x, y, );
 //                }
-                int width = Math.min(5, endX - x - 1);
-                int height = Math.min(5, endY - y - 1);
+                int width = Math.min(TILE_SIZE, endX - x - 1);
+                int height = Math.min(TILE_SIZE, endY - y - 1);
                 for (int xx = x; xx < x+width; xx++) {
                     for (int yy = y; yy < y+height; yy++) {
                         image.setRGB(xx, yy, image.getRGB(x,y));

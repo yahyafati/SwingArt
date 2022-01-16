@@ -66,19 +66,22 @@ public class CircleScreen extends ScreenPanel {
         g2.setColor(Color.WHITE);
 
         Radius finalRad = null;
-//        		g2.setColor(Color.WHITE);
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new BasicStroke(50f));
+        int _counter = 0;
         for (Radius radColor : (ArrayList<Radius>)radiuses.clone()) {
             finalRad = radColor;
             int radius = radColor.radius;
 //        			g2.setStroke(new BasicStroke(radColor.stroke));
-            g2.setStroke(new BasicStroke(30f));
-            g2.setColor(radColor.color);
+//            g2.setColor(radColor.color);
+//            g2.setColor(_counter % 2 == 0 ? Color.WHITE : Color.BLACK);
             g2.drawOval(x-radius, y-radius, radius*2, radius*2);
+            _counter++;
         }
 
 //        		Color textColor = new Color(255 - finalRad.color.getRed(), 255-finalRad.color.getGreen(), 255-finalRad.color.getBlue());
 //        		g2.setColor(textColor);
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.GREEN);
 
         if(finalRad != null) {
             if (circleCount.get() == sentence.length -1) {
@@ -108,7 +111,7 @@ public class CircleScreen extends ScreenPanel {
                 circleCount.set((circleCount.get()+1)%sentence.length);
                 counter.set(0);
             }
-            radiuses.removeIf(radius -> radius.radius > getWidth()/2);
+            radiuses.removeIf(radius -> radius.radius > getWidth());
             for (Radius radius : radiuses) {
                 radius.radius += 10;
                 radius.stroke = 1f;

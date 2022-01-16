@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
         setContentPane(contentPane);
     }
 
-    private ScreenPanel getScreen(ScreenType type) {
+    public ScreenPanel getScreen(ScreenType type) {
         switch (type) {
             case CircleScreen: return new CircleScreen(this);
             case DarkenScreen: return new DarkenScreen(this);
@@ -102,11 +102,7 @@ public class MainFrame extends JFrame {
         changeScreeLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Clicked");
-                System.out.println("Clicked");
-                setScreen(getScreen(ScreenType.CircleScreen));
-//                JOptionPane.showMessageDialog(changeScreeLabel.getRootPane(), "Clicked");
+                openChangeScreenDialog();
             }
         });
         controllerPanel.add(changeScreeLabel);
@@ -126,6 +122,10 @@ public class MainFrame extends JFrame {
         controllerPanel.add(exitLabel);
 
         contentPane.add(controllerPanel, BorderLayout.NORTH);
+    }
+
+    private void openChangeScreenDialog() {
+        new ChangeScreen(this, this).setVisible(true);
     }
 
     private void exit() {
