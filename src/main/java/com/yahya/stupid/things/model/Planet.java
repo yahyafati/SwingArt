@@ -68,7 +68,7 @@ public class Planet implements Cloneable {
             // TODO: copy mutable state here, so the clone can't change the internals of the original
 //            clone.color = Color.decode("#12af8a");
             clone.color = new Color((int) (Math.random()*Integer.MAX_VALUE));
-            clone.setCurrentDegree(Math.random()*360);
+//            clone.setCurrentDegree(Math.random()*360);
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

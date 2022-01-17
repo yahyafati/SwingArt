@@ -61,6 +61,9 @@ public class SolarSystemScreen extends ScreenPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y);
 
+//        final int SHADOW_SIZE = 3;
+//        g2.setColor(Color.decode("#666666"));
+//        g2.fillOval(CENTER_X - SUN_RADIUS + SHADOW_SIZE, CENTER_Y - SUN_RADIUS - SHADOW_SIZE, SUN_RADIUS*2, SUN_RADIUS*2);
         g2.setColor(Color.decode("#FFCC66"));
         g2.fillOval(CENTER_X - SUN_RADIUS, CENTER_Y - SUN_RADIUS, SUN_RADIUS*2, SUN_RADIUS*2);
 
