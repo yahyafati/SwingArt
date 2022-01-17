@@ -48,7 +48,8 @@ public class DVDScreen extends ScreenPanel {
         System.out.println(new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y));
         this.form = new Form(1, 0);
 
-        currentPosition = new Point(MIN_X + BOX_WIDTH/2, (int) form.calculate(MIN_X + BOX_WIDTH/2));
+        currentPosition = new Point(MIN_X + BOX_WIDTH/2, (int) form.calculate(MIN_X + BOX_WIDTH/2.0));
+        System.out.println(currentPosition);
         myPoints.add(new Point(currentPosition));
         currentColor = new Color((int) (Math.random() * Integer.MAX_VALUE));
         init();
@@ -96,12 +97,15 @@ public class DVDScreen extends ScreenPanel {
         if (service != null) {
             service.shutdown();
             service = null;
-            repaint();
         }
-        currentPosition = new Point(MIN_X, (int) form.calculate(MIN_X));
+        form.reset();
+        currentPosition = new Point(MIN_X + BOX_WIDTH/2, (int) form.calculate(MIN_X + BOX_WIDTH/2.0));
+//        currentPosition = new Point(MIN_X, (int) form.calculate(MIN_X));
         myPoints.clear();
         myPoints.add(new Point(currentPosition));
         currentColor = new Color((int) (Math.random() * Integer.MAX_VALUE));
+        xChange.set(1);
+        repaint();
     }
 
     private boolean isOutOfBound(Point position) {

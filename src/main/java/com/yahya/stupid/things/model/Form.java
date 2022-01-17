@@ -7,9 +7,16 @@ public class Form {
     private double slope;
     private double yIntercept;
 
+    private final double originalSlope;
+    private final double originalYIntercept;
     public Form(double slope, double yIntercept) {
-        this.slope = slope;
-        this.yIntercept = yIntercept;
+        this.slope = this.originalSlope = slope;
+        this.yIntercept = this.originalYIntercept = yIntercept;
+    }
+
+    public void reset() {
+        setSlope(originalSlope);
+        setyIntercept(originalYIntercept);
     }
 
     public double calculate(double x) {
